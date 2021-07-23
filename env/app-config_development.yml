@@ -1,0 +1,21 @@
+app:
+  name: GOCRAWLER-WEB-SAMPLE
+  environment: development
+  host: 0.0.0.0
+  debug: true
+  port: 9090
+  protocol: http
+sqldatabase:
+  connection: postgres
+  name: "gocrawler-web"
+  user: "postgres"
+  password: "secret00"
+  port: 5432
+  host: 0.0.0.0
+  MaximumOpenConnection: 100
+  MaximumIdleConnection: 25
+cassandradb:
+  host : 127.0.0.1
+  username: username
+  password: password
+  keyspace: keyspace
