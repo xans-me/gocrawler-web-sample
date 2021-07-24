@@ -12,7 +12,16 @@ type HTTPDelivery struct {
 
 // Indexing controller
 func (delivery HTTPDelivery) Indexing(w http.ResponseWriter, r *http.Request) {
-	response.SendSuccessResponse(w, "OK")
+	// business logic execution for updating product item
+	data, err := delivery.service.IndexingKurs(r.Context())
+	// http response when there is a business logic error
+	if err != nil {
+		response.SendErrorResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// http response when the service executed successfully
+	response.SendSuccessResponse(w, data)
 }
 
 // NewDelivery to init http delivery
