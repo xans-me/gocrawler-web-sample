@@ -1,7 +1,7 @@
 package app
 
 import (
-	"database/sql"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gocrawler-web-sample/infrastructure/configuration"
 	"gocrawler-web-sample/infrastructure/db"
 	"gocrawler-web-sample/infrastructure/environment"
@@ -26,7 +26,7 @@ func ProvideLogger(env environment.AppEnvironment) *logrus.Logger {
 	return logger
 }
 
-// ProvidePostgres is function to init postgres connection
-func ProvidePostgres(config *configuration.AppConfig) *sql.DB {
-	return db.NewPostgres(config)
+// ProvideMongodb is function to init mongodb connection
+func ProvideMongodb(conf *configuration.AppConfig) *mongo.Database {
+	return db.NewMongodb(conf)
 }

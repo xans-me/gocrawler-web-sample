@@ -17,13 +17,12 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
 	github.com/lib/pq v1.6.0
-	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.7.0
-	github.com/stretchr/testify v1.6.0 // indirect
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
+	go.mongodb.org/mongo-driver v1.7.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

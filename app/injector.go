@@ -3,8 +3,8 @@
 package app
 
 import (
-	"database/sql"
 	"github.com/google/wire"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gocrawler-web-sample/infrastructure/configuration"
 	"gocrawler-web-sample/infrastructure/environment"
 )
@@ -14,7 +14,7 @@ var (
 		configModuleSets,
 		ProvideAppEnvironment,
 		ProvideAppEnvConfig,
-		ProvidePostgres,
+		ProvideMongodb,
 	)
 )
 
@@ -26,6 +26,6 @@ func InjectAppConfig() configuration.AppConfig {
 	panic(wire.Build(AppModule))
 }
 
-func InjectPostgres() *sql.DB {
+func InjectMongoDB() *mongo.Database {
 	panic(wire.Build(AppModule))
 }

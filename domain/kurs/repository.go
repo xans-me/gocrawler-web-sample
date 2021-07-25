@@ -1,92 +1,50 @@
 package kurs
 
 import (
-	"database/sql"
+	"context"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository struct {
-	pg *sql.DB
+	mongoDB *mongo.Database
 }
 
 func (r *Repository) InsertERates(symbol string, eRate ERate, date string) (err error) {
-	query := `
-   			INSERT INTO kurs.e_rates (symbol, buy, sell, indexing_date)    
-   			VALUES($1, $2, $3, $4)
-   `
-	_, err = r.pg.Exec(query, symbol, eRate.ERateBuy, eRate.ERateSell, date)
-	return
+	data := bson.M{"symbol": symbol, "jual": eRate.ERateSell, "beli": eRate.ERateBuy, "date": date}
+
+	_, err = r.mongoDB.Collection("e_rates").InsertOne(context.Background(), data)
+
+	return err
 }
 
 func (r *Repository) InsertTTCounter(symbol string, tt TTCounter, date string) (err error) {
-	query := `
-   			INSERT INTO kurs.tt_counter (symbol, buy, sell, indexing_date)    
-   			VALUES($1, $2, $3, $4)
-   `
-	_, err = r.pg.Exec(query, symbol, tt.TTBuy, tt.TTSell, date)
+	data := bson.M{"symbol": symbol, "jual": tt.TTSell, "beli": tt.TTBuy, "date": date}
+	_, err = r.mongoDB.Collection("tt_counter").InsertOne(context.Background(), data)
+
 	return
 }
 
 func (r *Repository) InsertBankNotes(symbol string, note BankNote, date string) (err error) {
-	query := `
-   			INSERT INTO kurs.bank_notes (symbol, buy, sell, indexing_date)    
-   			VALUES($1, $2, $3, $4)
-   `
-	_, err = r.pg.Exec(query, symbol, note.BNBuy, note.BNSell, date)
+	data := bson.M{"symbol": symbol, "jual": note.BNSell, "beli": note.BNBuy, "date": date}
+	_, err = r.mongoDB.Collection("bank_notes").InsertOne(context.Background(), data)
+
 	return
 }
 
-func (r *Repository) IsExistKurs(data DataKurs) (countBN, countTT, countERates int, err error) {
-	queryBN := `
-		SELECT 
-			COUNT(*) as countBN 
-		FROM
-			kurs.bank_notes
-		WHERE
-			symbol = $1 and indexing_date = $2
-	`
-
-	err = r.pg.QueryRow(queryBN, data.Symbol, data.Date).Scan(&countBN)
+func (r *Repository) IsExistKurs(data DataKurs) (countBN, countTT, countERates int64, err error) {
+	countBN, err = r.mongoDB.Collection("bank_notes").CountDocuments(context.Background(), bson.M{"symbol": data.Symbol, "date": data.Date})
 	if err != nil {
-		if err == sql.ErrNoRows {
-			err = nil
-			countBN = 0
-		}
 		return
 	}
 
-	queryTT := `
-		SELECT 
-			COUNT(*) as countTT 
-		FROM
-			kurs.tt_counter
-		WHERE
-			symbol = $1 and indexing_date = $2
-	`
-
-	err = r.pg.QueryRow(queryTT, data.Symbol, data.Date).Scan(&countTT)
+	countTT, err = r.mongoDB.Collection("tt_counter").CountDocuments(context.Background(), bson.M{"symbol": data.Symbol, "date": data.Date})
 	if err != nil {
-		if err == sql.ErrNoRows {
-			err = nil
-			countTT = 0
-		}
 		return
 	}
 
-	queryERates := `
-		SELECT 
-			COUNT(*) as countTT 
-		FROM
-			kurs.e_rates
-		WHERE
-			symbol = $1 and indexing_date = $2
-	`
-
-	err = r.pg.QueryRow(queryERates, data.Symbol, data.Date).Scan(&countERates)
+	countERates, err = r.mongoDB.Collection("e_rates").CountDocuments(context.Background(), bson.M{"symbol": data.Symbol, "date": data.Date})
 	if err != nil {
-		if err == sql.ErrNoRows {
-			err = nil
-			countERates = 0
-		}
 		return
 	}
 
@@ -94,6 +52,6 @@ func (r *Repository) IsExistKurs(data DataKurs) (countBN, countTT, countERates i
 }
 
 // NewRepository to create new repository instance
-func NewRepository(db *sql.DB) *Repository {
-	return &Repository{pg: db}
+func NewRepository(mongoDB *mongo.Database) *Repository {
+	return &Repository{mongoDB: mongoDB}
 }

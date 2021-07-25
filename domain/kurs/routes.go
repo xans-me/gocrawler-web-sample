@@ -9,9 +9,12 @@ type Routes struct {
 
 // RegisterRoutes to register all public routes
 func (routes Routes) RegisterRoutes(r chi.Router) {
-	r.Route("/kurs", func(r chi.Router) {
-		r.Get("/indexing", routes.delivery.Indexing)
+
+	r.Get("/api/indexing", routes.delivery.Indexing)
+
+	r.Route("/api/kurs", func(r chi.Router) {
 		r.Post("/", routes.delivery.InsertKurs)
+		r.Put("/", routes.delivery.InsertKurs)
 	})
 }
 

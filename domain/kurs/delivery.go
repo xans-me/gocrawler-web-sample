@@ -39,6 +39,21 @@ func (delivery HTTPDelivery) InsertKurs(w http.ResponseWriter, r *http.Request) 
 
 }
 
+func (delivery HTTPDelivery) UpdateKurs(w http.ResponseWriter, r *http.Request) {
+	var dataKurs DataKurs
+	if err := json.NewDecoder(r.Body).Decode(&dataKurs); err != nil {
+		response.SendErrorResponse(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// TODO 1 : Need to changes
+	if err := delivery.service.InsertDataKurs(dataKurs); err != nil {
+		response.SendErrorResponse(w, err.Error(), http.StatusBadRequest)
+	}
+
+	response.SendSuccessResponse(w, http.StatusOK)
+
+}
+
 // NewDelivery to init http delivery
 func NewDelivery(service IKursService) *HTTPDelivery {
 	return &HTTPDelivery{service: service}

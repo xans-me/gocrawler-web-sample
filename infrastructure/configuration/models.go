@@ -2,8 +2,8 @@ package configuration
 
 // AppConfig struct model, the base configuration struct for this web service
 type AppConfig struct {
-	App         App
-	SQLDatabase SQLDatabase
+	App     App
+	Mongodb Mongodb
 }
 
 // App struct model, the configuration file related to basic webservice info such as name environtment
@@ -16,14 +16,8 @@ type App struct {
 	Protocol    string
 }
 
-// SQLDatabase struct model, this is configuration for postgresql, storing relational data
-type SQLDatabase struct {
-	Name                  string
-	User                  string
-	Password              string
-	Port                  string
-	Connection            string
-	Host                  string
-	MaximumOpenConnection int
-	MaximumIdleConnection int
+// Mongodb struct model, contains configuration for mongodb. MongoDB is a cross-platform document-oriented database program (noSQL)
+type Mongodb struct {
+	DbName     string
+	Connection string
 }

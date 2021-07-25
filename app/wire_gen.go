@@ -6,8 +6,8 @@
 package app
 
 import (
-	"database/sql"
 	"github.com/google/wire"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gocrawler-web-sample/infrastructure/configuration"
 	"gocrawler-web-sample/infrastructure/environment"
 )
@@ -44,11 +44,11 @@ func InjectAppConfig() configuration.AppConfig {
 	return configurationAppConfig
 }
 
-func InjectPostgres() *sql.DB {
+func InjectMongoDB() *mongo.Database {
 	environmentConfigBinderProperties := _wireEnvironmentConfigBinderPropertiesValue
 	appConfig := ProvideAppConfig(environmentConfigBinderProperties)
-	db := ProvidePostgres(appConfig)
-	return db
+	database := ProvideMongodb(appConfig)
+	return database
 }
 
 // configWire.go:
@@ -77,6 +77,6 @@ var (
 		configModuleSets,
 		ProvideAppEnvironment,
 		ProvideAppEnvConfig,
-		ProvidePostgres,
+		ProvideMongodb,
 	)
 )
