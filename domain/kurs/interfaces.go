@@ -3,7 +3,7 @@ package kurs
 // IKursService interface
 type IKursService interface {
 	IndexingKurs() (ResultIndexing []DataKurs, err error)
-	InsertDataKurs(kurs DataKurs) ( err error)
+	InsertDataKurs(kurs DataKurs) (err error)
 }
 
 // IKursRepository interface

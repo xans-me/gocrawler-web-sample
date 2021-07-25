@@ -10,8 +10,8 @@ import (
 )
 
 type Service struct {
-	appEnvironment   environment.AppEnvironment
-	repo IKursRepository
+	appEnvironment environment.AppEnvironment
+	repo           IKursRepository
 }
 
 func (s *Service) IndexingKurs() (data []DataKurs, err error) {
@@ -29,33 +29,33 @@ func (s *Service) BulkInsertDataKurs(data []DataKurs) {
 	for _, kurs := range data {
 		err := s.InsertDataKurs(kurs)
 		if err != nil {
-			log.Error("error when insert scrapped kurs: ", err.Error())
+			log.Error("error when insert scrapped kurs ==> ", err.Error())
 		}
 	}
 }
 
-func (s *Service) InsertDataKurs(kurs DataKurs) ( err error) {
+func (s *Service) InsertDataKurs(kurs DataKurs) (err error) {
 	countBN, countTT, countERates, err := s.repo.IsExistKurs(kurs)
 	if err != nil {
 		return err
 	}
 
 	if countBN < 1 {
-		err = s.repo.InsertBankNotes(kurs.Symbol,kurs.BankNote,kurs.Date)
+		err = s.repo.InsertBankNotes(kurs.Symbol, kurs.BankNote, kurs.Date)
 		if err != nil {
 			return
 		}
 	}
 
 	if countTT < 1 {
-		err = s.repo.InsertTTCounter(kurs.Symbol,kurs.TTCounter,kurs.Date)
+		err = s.repo.InsertTTCounter(kurs.Symbol, kurs.TTCounter, kurs.Date)
 		if err != nil {
 			return
 		}
 	}
 
 	if countERates < 1 {
-		err = s.repo.InsertERates(kurs.Symbol,kurs.ERate,kurs.Date)
+		err = s.repo.InsertERates(kurs.Symbol, kurs.ERate, kurs.Date)
 		if err != nil {
 			return
 		}
@@ -123,8 +123,13 @@ func scrappingKurs() (ResultIndexing []DataKurs, err error) {
 }
 
 func convertStringKursToFloat64(value string) (result float64, err error) {
-	valueString := strings.Replace(strings.Replace(value, ",", ".", 1), ".", "", 1)
-	return strconv.ParseFloat(valueString, 64)
+	if strings.Contains(value, ",") {
+		replaceComma := strings.Replace(value, ",", ".", 1)
+		removePointFirst := strings.Replace(replaceComma, ".", "", 1)
+		value = removePointFirst
+	}
+
+	return strconv.ParseFloat(value, 64)
 }
 
 // NewService function to init service instance

@@ -7,11 +7,11 @@ app:
   protocol: http
 sqldatabase:
   connection: postgres
-  name: "gocrawler-web"
+  name: "postgres"
   user: "postgres"
-  password: "secret00"
+  password: "postgres"
   port: 5432
-  host: 0.0.0.0
+  host: localhost
   MaximumOpenConnection: 100
   MaximumIdleConnection: 25
 cassandradb:

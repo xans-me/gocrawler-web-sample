@@ -22,7 +22,7 @@ func ProvideAppEnvConfig(conf *configuration.AppConfig) configuration.AppConfig 
 
 // ProvideLogger is a function to log http request and deployment to a file
 func ProvideLogger(env environment.AppEnvironment) *logrus.Logger {
-	logger := logger.New(env, logger.FileTemplate("command-product-app-%Y_%m_%d"))
+	logger := logger.New(env, logger.FileTemplate("gocrawler-web-%Y_%m_%d"))
 	return logger
 }
 

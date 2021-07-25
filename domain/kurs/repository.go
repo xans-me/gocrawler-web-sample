@@ -8,7 +8,6 @@ type Repository struct {
 	pg *sql.DB
 }
 
-
 func (r *Repository) InsertERates(symbol string, eRate ERate, date string) (err error) {
 	query := `
    			INSERT INTO kurs.e_rates (symbol, buy, sell, indexing_date)    
