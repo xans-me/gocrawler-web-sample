@@ -11,6 +11,7 @@ type Routes struct {
 func (routes Routes) RegisterRoutes(r chi.Router) {
 	r.Route("/kurs", func(r chi.Router) {
 		r.Get("/indexing", routes.delivery.Indexing)
+		r.Post("/", routes.delivery.InsertKurs)
 	})
 }
 

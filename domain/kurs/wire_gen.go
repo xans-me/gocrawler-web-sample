@@ -20,8 +20,8 @@ func InjectRoutes() (*Routes, error) {
 	}
 	environmentConfigBinderProperties := _wireEnvironmentConfigBinderPropertiesValue
 	appConfig := app.ProvideAppConfig(environmentConfigBinderProperties)
-	configurationAppConfig := app.ProvideAppEnvConfig(appConfig)
-	repository := NewRepository(configurationAppConfig)
+	db := app.ProvidePostgres(appConfig)
+	repository := NewRepository(db)
 	service := NewService(appEnvironment, repository)
 	httpDelivery := NewDelivery(service)
 	routes := NewRoutes(httpDelivery)
